@@ -1,5 +1,5 @@
 {
-    // UC 5 : Using function, while condition, and switch case
+    // UC 6 : Store daily wage along with total wage into an array
     const IS_PART_TIME = 1;
     const IS_FULL_TIME = 2;
     const PART_TIME_HOURS = 4;
@@ -10,10 +10,14 @@
 
     let totalEmpHours = 0;
     let totalWorkingDays = 0;
+    let empdailyWageArray = new Array();
     while (totalEmpHours <= MAX_HOURS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS) {
+        let empHours = 0;
         totalWorkingDays++;
         let empCheck = Math.floor(Math.random() * 10) % 3;
-        totalEmpHours += getWorkingHours(empCheck);
+        empHours = getWorkingHours(empCheck);
+        totalEmpHours += empHours;
+        empdailyWageArray.push(calculateDailyWage(empHours));
     }
     function getWorkingHours(empCheck) {
         let empHours = 0;
@@ -26,6 +30,13 @@
                 return 0;
         }
     }
-    let empWage = totalEmpHours * WAGE_PER_HOUR;
-    console.log("Total Days : " + totalWorkingDays + "\tTotal Hours : " + totalEmpHours + "\tEmp Wage : " + empWage);
+    function calculateDailyWage(empHours) {
+        return empHours * WAGE_PER_HOUR;
+    }
+    let totEmpWage = 0;
+    function sum(dailyWage) {
+        totEmpWage += dailyWage;
+    }
+    empdailyWageArray.forEach(sum);
+    console.log("Total Days : " + totalWorkingDays + "\tTotal Hours : " + totalEmpHours + "\tEmp Wage : " + totEmpWage);
 }
