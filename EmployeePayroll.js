@@ -42,5 +42,31 @@
     }
 
     //UC 10 - Ability to store the Day,Hours Worked and Wage Earned in a single object.
-    console.log("Showing daily hours worked and wage earned : " + empdailyHoursAndWageArray);
+   // console.log("Showing daily hours worked and wage earned : " + empdailyHoursAndWageArray);
+
+    //UC 11-A : Calculate total hours and total wage earned
+    let totalWages = empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyWage > 0)
+                    .reduce((totalWage, dailyHrsAndWage) => totalWage += dailyHrsAndWage.dailyWage, 0);
+    let totalHours = empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours > 0)
+                     .reduce((totalHour, dailyHrsAndWage) => totalHour += dailyHrsAndWage.dailyHours, 0);
+    console.log("Total Wage : " + totalWages);
+    console.log(("Total hours Worked : " + totalHours));
+
+    //11-B :  Show full working days using forEach
+    console.log("Logging full woork Days");
+    empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours ==8)
+                              .forEach(dailyHrsAndWage =>console.log(dailyHrsAndWage.toString()));
+
+    //11-C Show part time working using map by reducing to array
+    let partWorkingDayArr = empdailyHoursAndWageArray
+                            .filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours==4)
+                            .map(dailyHrsAndWage => dailyHrsAndWage.toString());
+    console.log("Logging part time days :" +partWorkingDayArr);  
+    
+    //11-D Storing the day number where no working day using map function
+    let nonWorkingDays=empdailyHoursAndWageArray
+                       .filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours == 0)
+                       .map(dailyHrsAndWage => dailyHrsAndWage.dayNum);
+    console.log("Non working days are : "+nonWorkingDays);
+
 }
