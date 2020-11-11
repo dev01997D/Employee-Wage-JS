@@ -9,16 +9,22 @@
 
     let totalEmpHours = 0;
     let totalWorkingDays = 0;
-    let empdailyWageArray = new Array();
-    let empdailyWageMap = new Map();
+    let empdailyHoursAndWageArray = new Array();
     while (totalEmpHours <= MAX_HOURS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS) {
         let empHours = 0;
         totalWorkingDays++;
         let empCheck = Math.floor(Math.random() * 10) % 3;
         empHours = getWorkingHours(empCheck);
         totalEmpHours += empHours;
-        empdailyWageArray.push(calculateDailyWage(empHours));
-        empdailyWageMap.set(totalWorkingDays, empHours);
+        //Using js object to hold daily wage, day num and wage earned into an array
+        empdailyHoursAndWageArray.push({
+            dayNum: totalWorkingDays,
+            dailyHours: empHours,
+            dailyWage: calculateDailyWage(empHours),
+            toString() {
+                return '\nDay ' + this.dayNum + " => Working Hours is : " + this.dailyHours + " => And wage earned is : " + this.dailyWage;
+            }
+        });
     }
     function getWorkingHours(empCheck) {
         //let empHours = 0;
@@ -35,24 +41,6 @@
         return empHours * WAGE_PER_HOUR;
     }
 
-    console.log(empdailyWageArray);
-    // UC 9 : calculate total wage, total hours worked 
-    console.log("Total wage is : " + empdailyWageArray.reduce((totalWage, dailyWage) => totalWage + dailyWage, 0));
-    let totalHoursWorked = Array.from(empdailyWageMap.values()).reduce((totalHours, dailyHours) => totalHours + dailyHours, 0);
-    console.log("Total Hours : " + totalHoursWorked)
-    console.log("Total Days : " + totalWorkingDays);
-
-    //Show the full working days, part working days and no working days
-    let nonWorkingdays = new Array();
-    let fullWorkingDays = new Array();
-    let partWorkingDays = new Array();
-
-    empdailyWageMap.forEach((value, key, Map) => {
-        if (value == 8) fullWorkingDays.push(key);
-        else if (value == 4) partWorkingDays.push(key);
-        else nonWorkingdays.push(key);
-    });
-    console.log("Full working days : " + fullWorkingDays);
-    console.log("Part working days : " + partWorkingDays);
-    console.log("No working days : " + nonWorkingdays);
+    //UC 10 - Ability to store the Day,Hours Worked and Wage Earned in a single object.
+    console.log("Showing daily hours worked and wage earned : " + empdailyHoursAndWageArray);
 }
