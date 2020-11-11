@@ -18,7 +18,11 @@
             return this._name;
         }
         set name(name) {
-            this._name = name;
+            let nameRegex =RegExp('^[A-Z]{1}[a-z]{2,}$');
+            if (nameRegex.test(name)) {
+                this._name=name;
+            }
+            else throw "Name is Incorrect!";
         }
         get gender() { return this._gender; }
         set gender(gender) { this._gender = gender; }
@@ -38,10 +42,22 @@
     let employeePayrollData = new EmployeePayrollData(1, "Mark", 2500.00);
     console.log(employeePayrollData.toString());
 
-    //Change the value of name and id and print it
-    employeePayrollData.name = "John";
-    employeePayrollData.id = 2;
-    console.log(employeePayrollData.toString());
+    //handling invalid name
+    try {
+        employeePayrollData.name="john";
+        console.log(employeePayrollData.toString);
+    } catch (error) {
+        console.error(error);
+    }
+
+    //handling invalid name
+    try {
+        employeePayrollData.id=2;
+        employeePayrollData.name="Jo";
+        console.log(employeePayrollData.toString);
+    } catch (error) {
+        console.error(error);
+    }
 
     //Creating new employee with extended field
     let newEmployeePayrollData = new EmployeePayrollData(3, "Terrisa", 5000.00, "F", new Date());
