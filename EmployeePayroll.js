@@ -1,5 +1,4 @@
 {
-    // UC 6 : Store daily wage along with total wage into an array
     const IS_PART_TIME = 1;
     const IS_FULL_TIME = 2;
     const PART_TIME_HOURS = 4;
@@ -11,6 +10,7 @@
     let totalEmpHours = 0;
     let totalWorkingDays = 0;
     let empdailyWageArray = new Array();
+    let empdailyWageMap = new Map();
     while (totalEmpHours <= MAX_HOURS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS) {
         let empHours = 0;
         totalWorkingDays++;
@@ -18,9 +18,10 @@
         empHours = getWorkingHours(empCheck);
         totalEmpHours += empHours;
         empdailyWageArray.push(calculateDailyWage(empHours));
+        empdailyWageMap.set(totalWorkingDays, empHours);
     }
     function getWorkingHours(empCheck) {
-        let empHours = 0;
+        //let empHours = 0;
         switch (empCheck) {
             case IS_PART_TIME:
                 return PART_TIME_HOURS;
@@ -34,61 +35,24 @@
         return empHours * WAGE_PER_HOUR;
     }
 
-    //7A - Calculate total empWage using ForEach traversal and reduce method
-    console.log("Total Days : " + totalWorkingDays + "\tTotal Hours : " + totalEmpHours);
-    let totEmpWage = 0;
-    function sum(dailyWage) {
-        totEmpWage += dailyWage;
-    }
-    empdailyWageArray.forEach(sum);
-    console.log("Total employee wage calculated using ForEach method : " + totEmpWage);
+    console.log(empdailyWageArray);
+    // UC 9 : calculate total wage, total hours worked 
+    console.log("Total wage is : " + empdailyWageArray.reduce((totalWage, dailyWage) => totalWage + dailyWage, 0));
+    let totalHoursWorked = Array.from(empdailyWageMap.values()).reduce((totalHours, dailyHours) => totalHours + dailyHours, 0);
+    console.log("Total Hours : " + totalHoursWorked)
+    console.log("Total Days : " + totalWorkingDays);
 
-    function findTotalWages(totalWage, dailyWage) {
-        return totalWage + dailyWage;
-    }
-    console.log("Total employee wage calculated using reduce method : " + empdailyWageArray.reduce(findTotalWages));
+    //Show the full working days, part working days and no working days
+    let nonWorkingdays = new Array();
+    let fullWorkingDays = new Array();
+    let partWorkingDays = new Array();
 
-    //7B - Show the day along with DailyWage using Array map helper function
-    let dayCounter = 0;
-    function mapDayWithWage(dailyWage) {
-        dayCounter++;
-        return dayCounter + "=" + dailyWage;
-    }
-    let mapDayWithWageArr = empdailyWageArray.map(mapDayWithWage);
-    console.log("Day count and wage map is \n " + mapDayWithWageArr);
-
-    //7C - Show days when full time employee i.e. 160 earned
-    function fullTimeWage(dailyWage) {
-        return dailyWage.includes("160");
-    }
-    let fullDayWageArr = mapDayWithWageArr.filter(fullTimeWage);
-    console.log("Full time wage on given days : \n" + fullDayWageArr);
-
-    //7D - Find the first occurrence when Full Time Wage was earned using find function
-    function findFirstFullTimeWage(dailyWage) {
-        return dailyWage.includes("160");
-    }
-    console.log("First day of full time wage is : " + mapDayWithWageArr.find(findFirstFullTimeWage));
-
-    //7E - Check if Every Element of Full Time Wage is truly holding Full time wage
-    function isAllFullTimeWage(dailyWage) {
-        return dailyWage.includes("160");
-    }
-    console.log("If all the wages are of full time wage? : " + mapDayWithWageArr.every(isAllFullTimeWage));
-
-    //7F - Check if there is any Part Time Wage
-    function isTherePartTimeWage(dailyWage) {
-        return dailyWage.includes("80");
-    }
-    console.log("Is there any part time wage present? : " + mapDayWithWageArr.some(isTherePartTimeWage));
-
-    //7G - Find the number of days the Employee Worked
-    let workedDays = 0;
-    function totalNoOfWorkedDays(numOfDays, dailyWage) {
-        if (dailyWage > 0) {
-            return workedDays += 1;
-        }
-        return workedDays;
-    }
-    console.log("Total no of days employee worked is : " + empdailyWageArray.reduce(totalNoOfWorkedDays));
+    empdailyWageMap.forEach((value, key, Map) => {
+        if (value == 8) fullWorkingDays.push(key);
+        else if (value == 4) partWorkingDays.push(key);
+        else nonWorkingdays.push(key);
+    });
+    console.log("Full working days : " + fullWorkingDays);
+    console.log("Part working days : " + partWorkingDays);
+    console.log("No working days : " + nonWorkingdays);
 }
