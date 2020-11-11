@@ -1,81 +1,91 @@
 {
-    const IS_PART_TIME = 1;
-    const IS_FULL_TIME = 2;
-    const PART_TIME_HOURS = 4;
-    const FULL_TIME_HOURS = 8;
-    const WAGE_PER_HOUR = 20;
-    const NUM_OF_WORKING_DAYS = 20;
-    const MAX_HOURS_IN_MONTH = 100;
+    class EmployeePayrollData {
+        //Property
+        name;
+        startDate
 
-    let totalEmpHours = 0;
-    let totalWorkingDays = 0;
-    let empdailyHoursAndWageArray = new Array();
-    while (totalEmpHours <= MAX_HOURS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS) {
-        let empHours = 0;
-        totalWorkingDays++;
-        let empCheck = Math.floor(Math.random() * 10) % 3;
-        empHours = getWorkingHours(empCheck);
-        totalEmpHours += empHours;
-        //Using js object to hold daily wage, day num and wage earned into an array
-        empdailyHoursAndWageArray.push({
-            dayNum: totalWorkingDays,
-            dailyHours: empHours,
-            dailyWage: calculateDailyWage(empHours),
-            toString() {
-                return '\nDay ' + this.dayNum + " => Working Hours is : " + this.dailyHours + " => And wage earned is : " + this.dailyWage;
+        //constructors : JS class can have only one constructor, so use spread operator
+        constructor(...params) {
+            this.id = params[0];
+            this.name = params[1];
+            this.salary = params[2];
+            this.gender = params[3];
+            if (params[4] > new Date()) throw "future date not allowed"
+            {
+                this.startDate = params[4];
             }
-        });
-    }
-    function getWorkingHours(empCheck) {
-        //let empHours = 0;
-        switch (empCheck) {
-            case IS_PART_TIME:
-                return PART_TIME_HOURS;
-            case IS_FULL_TIME:
-                return FULL_TIME_HOURS;
-            default:
-                return 0;
+        }
+
+        //getters and Setters
+        get id() { return this._id; }
+        set id(id) {
+            let idRegex = RegExp('^[0-9]{1,}$');
+            if (idRegex.test(id)) {
+                this._id = id;
+            }
+            else throw "Id should be positive number."
+        }
+        get salary() { return this._salary; }
+        set salary(salary) {
+            let salaryRegex = RegExp('^[1-9]+[0-9]*$');
+            if (salaryRegex.test(salary)) {
+                this._salary = salary;
+            }
+            else throw "Salary should be positive real number."
+        }
+        get gender() { return this._gender; }
+        set gender(gender) {
+            let genderRegex = RegExp('[M,F]{1}$');
+            if (genderRegex.test(gender)) {
+                this._gender = gender;
+            }
+            else throw "invalid gender type"
+        }
+
+        //Method
+        toString() {
+            //Options is used to format the output of date into user requirement
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const empDate = this.startDate === undefined ? "undefined" :
+                this.startDate.toLocaleDateString("en-US", options);
+            return "Id : " + this.id + ", Name : " + this.name + ", Salary : " + this.salary
+                + ", gender : " + this.gender + ", Start Date : " + empDate;
         }
     }
-    function calculateDailyWage(empHours) {
-        return empHours * WAGE_PER_HOUR;
+
+    //Creating object of class
+    let employeePayrollData = new EmployeePayrollData(3, "Terrisa", 5000.00, "F", new Date());
+    console.log(employeePayrollData.toString());
+
+    //handling invalid id
+    try {
+        employeePayrollData.id = -2;
+        console.log(employeePayrollData.toString());
+    } catch (error) {
+        console.error(error);
     }
 
-    //UC 7-A : Calculate total hours and total wage earned
-    let totalWages = empdailyHoursAndWageArray
-                    .filter(dailyHrsAndWage => dailyHrsAndWage.dailyWage > 0)
-                    .reduce((totalWage, dailyHrsAndWage) => totalWage += dailyHrsAndWage.dailyWage, 0);
-    console.log("Total Wage Earned is : "+totalWages);
-
-    //UC-7B : Show day along with daily wage using a map
-    let dayWithDailyWageMap= new Map();
-    empdailyHoursAndWageArray.map(dailyHrsAndWage=>{
-        dayWithDailyWageMap.set(dailyHrsAndWage.dayNum, dailyHrsAndWage.dailyWage);
-    });
-    console.log("Showing each day with wage earned : ");
-    for(let [key ,value] of dayWithDailyWageMap){
-        console.log("Day Number : "+key + ", Wage earned : "+value);
+    //handling invalid salary
+    try {
+        employeePayrollData.salary = -487;
+        console.log(employeePayrollData.toString());
+    } catch (error) {
+        console.error(error);
     }
 
-    //7-C :  Show full working days using forEach
-    console.log("Logging full woork Days");
-    empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours ==8)
-                             .forEach(dailyHrsAndWage =>console.log(dailyHrsAndWage.toString()));
+    //handling invalid gender
+    try {
+        employeePayrollData.gender = "S";
+        console.log(employeePayrollData.toString());
+    } catch (error) {
+        console.error(error);
+    }
 
-    //7-D : Finding first occurence of full time wage
-    console.log("First day of full time wage is given below : " + empdailyHoursAndWageArray
-                                                                  .find(dailyHrsAndWage => dailyHrsAndWage.dailyHours == 8));
-
-    //7-E - Check if Every Element of Full Time Wage is truly holding Full time wage
-    console.log("If all the wages are of full time wage? : " + empdailyHoursAndWageArray
-                                                               .every(dailyHrsAndWage => dailyHrsAndWage.dailyWage == 160));
-
-    //11-F - Check if there is any Part Time Wage
-    console.log("Is there any part time wage present? : " + empdailyHoursAndWageArray
-                                                            .some(dailyHrsAndWage => dailyHrsAndWage.dailyHours == 4));
-
-    //11-G - Find the number of days the Employee Worked
-    console.log("Total no of days employee worked is : " + empdailyHoursAndWageArray
-                                                           .filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours>0)
-                                                           .reduce((totalWorkedDays, dailyHrsAndWage) => totalWorkedDays+=1, 0));
+    //handling invalid date, when given future date
+    try {
+        employeePayrollData.startDate = new Date("December 25, 2020");
+        console.log(employeePayrollData.toString());
+    } catch (error) {
+        console.error(error);
+    }
 }
