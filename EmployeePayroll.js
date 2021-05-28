@@ -52,11 +52,10 @@
     console.log("Total Wage : " + totalWages);
     console.log(("Total hours Worked : " + totalHours));
 
-    //11-B :  Show full working days using forEach
-    console.log("Logging full woork Days");
-    empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours ==8)
-                              .forEach(dailyHrsAndWage =>console.log(dailyHrsAndWage.toString()));
-
+   // 11-B :  Show full working days using forEach
+    process.stdout.write("Logging full woork Days");
+    empdailyHoursAndWageArray.filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours == 8).forEach(dailyHrsAndWage => process.stdout.write(dailyHrsAndWage.toString()));
+    
     //11-C Show part time working using map by reducing to array
     let partWorkingDayArr = empdailyHoursAndWageArray
                             .filter(dailyHrsAndWage => dailyHrsAndWage.dailyHours==4)
